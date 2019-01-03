@@ -1,0 +1,55 @@
+html {
+    font-size: 1rem;
+}
+
+@include media-breakpoint-up(sm) {
+    html {
+    font-size: 1.2rem;
+    }
+}
+
+@include media-breakpoint-up(md) {
+    html {
+    font-size: 1.4rem;
+    }
+}
+
+@include media-breakpoint-up(lg) {
+    html {
+    font-size: 1.6rem;
+    }
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: lighter;
+    line-height: 25.6px;
+    color: #22171F;
+    background-color: #F6F4F5;
+    margin-left: 20px;
+}
+
+p {
+    text-align: justify;
+}
+
+ 
+h1, h2, h3, h4, h5, h6 {
+   font-family: 'Montserrat', sans-serif;
+   font-weight: lighter;
+   text-transform: uppercase;
+   color: #22171F;
+}
+
+h2 {
+    margin-top: 30px;
+}
+
+h1, h2, h3, p {
+    margin-bottom:20px;
+}
+    
+p:last-child {
+    margin-bottom: 0;
+}

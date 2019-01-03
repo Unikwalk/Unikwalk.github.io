@@ -190,6 +190,13 @@ h5 a {
   color: white;
 }
 
+h5 a:hover {
+  text-transform: uppercase; 
+  text-decoration: none;
+  font-weight: bold;
+  color: black;
+}
+
 /* footer */
 footer {
   position: relative;

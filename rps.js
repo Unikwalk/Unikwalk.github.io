@@ -14,7 +14,7 @@ document.onkeyup = function (event) {
 
     // Alert the userChoice and computerGuess
     alert("Your Choice: " + userChoice.toUpperCase());
-    alert("Computer Choice: " + compChoice.toUpperCase());
+    alert("Computer's Choice: " + compChoice.toUpperCase());
 
     if (userChoice === compChoice) {
       tie++;
