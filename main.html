@@ -1,0 +1,69 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Crystals Collector Game</title>
+	<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="assets/css/reset.css"/>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css"/>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script type="text/javascript" src="assets/javascript/javascript.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+</head>
+
+<body>
+
+	<div class="header text-center">
+		<h1>CRYSTALS COLLECTOR</h1>
+		<h3>YOUR NUMBER: </h3>
+		<h3 id="yourNumber"></h3>
+	</div>
+	
+	<div class="container">
+        <div class="row">
+            <div class="col-lg-12 directions">
+                <p>There are four crystals below, by clicking on a cyrstal you will add
+					a specific amount of points to your total score.<br><br>You win the game by matching your total score
+					to the number displayed on screen. You lose the game if your total score goes above this number.
+					<br><br>
+					You will only know the value of each crystal once it has been clicked. Each time the game starts, the value of each crystal will also be changed.<br><br>
+					
+				</p>
+            </div>
+        </div>
+		
+		<div class="row">
+			<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 text-center">
+				<button style="border: none; background-color: transparent;"><img class="crystalimg img-responsive" id="crystal1" src="assets/images/image1.png" style="width:100px;height:100px;"></button>
+			</div>
+			<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 text-center">
+				<button style="border: none; background-color: transparent;"><img class="crystalimg img-responsive" id="crystal2" src="assets/images/image2.png" style="width:100px;height:100px;"/></button>
+			</div>
+			<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 text-center">
+				<button style="border: none; background-color: transparent;"><img class="crystalimg img-responsive" id="crystal3" src="assets/images/image3.png" style="width:100px;height:100px;"/></button>
+			</div>
+			<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 text-center">
+				<button style="border: none; background-color: transparent;"><img class="crystalimg img-responsive" id="crystal4" src="assets/images/image4.png" style="width:100px;height:100px;"/></button>
+			</div>
+		</div>
+
+		<div class="row text-center scoreBoard">
+			<div class="col-lg-4 total">
+				<h3>TOTAL SCORE:</h3>
+				<h3 id="totalScore"></h3>
+			</div>
+			<div class="col-lg-4 button">
+				<h3 id="winOrLose"></h3>
+				<button type="button" id="playAgain" class="btn btn-light btn-lg">PLAY AGAIN</button>
+			</div>
+			<div class="col-lg-4 scores">
+				<p class="score">WINS: <span id="win"></span></p> 
+				<p class="score">LOSSES: <span id="loss"></span></p>
+			</div>
+		</div>
+	</div>
+	
+</body>
+</html>
