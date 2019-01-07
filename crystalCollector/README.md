@@ -20,6 +20,5 @@ https://unikwalk.github.io/portfolio.html
 * CSS
 * HTML
 
-!(/assets/images/screenshot.png)
 
 
