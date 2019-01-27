@@ -25,7 +25,7 @@ body, html {
 
 @media screen and (max-width: 720px) {
   #main-container {
-    background-image: url("image7.jpg");
+    background-image: url("../images/image7.jpg");
     height: 100%;
     position: relative;
     background-position: center;
@@ -36,7 +36,7 @@ body, html {
 
 @media screen and (min-width: 720px) { 
   #main-container {
-    background-image: url("image7.jpg");
+    background-image: url("../images/image7.jpg");
     height: 100%;
     position: relative;
     background-position: center;
@@ -100,23 +100,24 @@ margin-top: 20px;
 }
 
 a {
-font-family: 'Montserrat', sans-serif;
-text-transform: uppercase;
-display: inline-block;
-margin: 10px;
-line-height: 20px;
-color: #22171F;
-text-decoration: none;
-background-color: #F6F4F5;
+  font-family: 'Montserrat', sans-serif;
+  text-transform: uppercase;
+  display: inline-block;
+  margin: 10px;
+  line-height: 20px;
+  color: #22171F;
+  text-decoration: none;
+  background-color: #F6F4F5;
 }
 
 a:hover{
-color: white;
+  color: white;
 }
 
 .home:hover {
 background-color:	#DE831D;
 border-radius: 0px 15px 0px 15px;
+color: pink;
 }
 
 .about:hover {
