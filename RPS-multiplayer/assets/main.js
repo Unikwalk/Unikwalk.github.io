@@ -80,9 +80,22 @@
 
 		//Both players are active
 		if(snapshot.val().db_p1Name !== undefined && snapshot.val().db_p2Name !== undefined) {
-            var rock = $("<img>").attr("src","assets/images/Rock.png");
-            var paper = $("<img>").attr("src","assets/images/Paper.png");
-            var scissors = $("<img>").attr("src","assets/images/Scissors.png");
+            var rock = $("<img>").attr({
+                                        "src":"assets/images/Rock.png",
+                                        "height": 250,
+                                        "width" : 250
+                                        })
+
+            var paper = $("<img>").attr({
+                                        "src":"assets/images/Paper.png",
+                                        "height": 250,
+                                        "width" : 250
+                                        })
+            var scissors = $("<img>").attr({
+                                        "src":"assets/images/Scissors.png",
+                                        "height": 250,
+                                        "width" : 250
+                                        })
 			// P1 plays first, turn 1
 			if(snapshot.val().db_playerTurn === 1) {
 				if(whoAmI === "player1") {
