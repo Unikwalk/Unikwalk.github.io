@@ -80,12 +80,15 @@
 
 		//Both players are active
 		if(snapshot.val().db_p1Name !== undefined && snapshot.val().db_p2Name !== undefined) {
+            var rock = $("<img>").attr("src","assets/images/Rock.png");
+            var paper = $("<img>").attr("src","assets/images/Paper.png");
+            var scissors = $("<img>").attr("src","assets/images/Scissors.png");
 			// P1 plays first, turn 1
 			if(snapshot.val().db_playerTurn === 1) {
 				if(whoAmI === "player1") {
-					$(".player1Rock").text("Rock");
-					$(".player1Paper").text("Paper");
-					$(".player1Scissors").text("Scissors");
+					$(".player1Rock").append(rock);
+					$(".player1Paper").append(paper);
+					$(".player1Scissors").append(scissors);
 					$("#gameStats").text("Choose your weapon!");
 					$("#p2c1").text(" ");
 				}
@@ -98,9 +101,9 @@
 			// P2 plays 2nd, turn = 2
 			else if(snapshot.val().db_playerTurn === 2) {
 				if(whoAmI === "player2") {
-					$(".player2Rock").text("Rock");
-					$(".player2Paper").text("Paper");
-					$(".player2Scissors").text("Scissors");
+					$(".player1Rock").append(rock);
+					$(".player1Paper").append(paper);
+					$(".player1Scissors").append(scissors);
 					$("#gameStats").text("Choose your weapon!");
 					$("#p1c1").text(" ");
 				}
@@ -116,25 +119,8 @@
 				$("#p1c1").text(p1Choice);
 				$("#p2c1").text(p2Choice);
 
-				if(theme === 1) {
-					var imgStyle = "3d";
-					theme++;
-				}
-				else if(theme === 2) {
-					var imgStyle = "icon";
-					theme++;
-				}
-				else if(theme === 3) {
-					var imgStyle = "real";
-					theme++;
-				}
-				else {
-					var imgStyle = "bathroom";
-					theme = 1;
-				}
-
-				$("#p1Image").html('<img src="assets/images/' + imgStyle + p1Choice + '.png" alt="' + p1Choice + '" class="img img-responsive" />');
-				$("#p2Image").html('<img src="assets/images/' + imgStyle + p2Choice + '.png" alt="' + p2Choice + '" class="img img-responsive" />');
+				$("#p1Image").html('<img src="assets/images/' + p1Choice + '.png" alt="' + p1Choice + '" class="img img-responsive" />');
+				$("#p2Image").html('<img src="assets/images/' + p2Choice + '.png" alt="' + p2Choice + '" class="img img-responsive" />');
 
 				// If player 1 wins
 				if((p1Choice === "Rock" && p2Choice === "Scissors") || (p1Choice === "Paper" && p2Choice === "Rock") || (p1Choice === "Scissors" && p2Choice === "Paper")) {
