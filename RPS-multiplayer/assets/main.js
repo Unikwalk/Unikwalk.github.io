@@ -21,6 +21,7 @@
 	var p2Name;
 	var p2Choice;
 
+	var tie;
 	var playerTurn;
 	var whoAmI = "none";
 
@@ -65,8 +66,8 @@
 		// If db_player2 has a name, display p2Stats
 		if(snapshot.val().db_p2Name !== undefined) {
 			$("#player2Name").text(snapshot.val().db_p2Name);
-			$("#player2LblWins").text("Wins: " + snapshot.val().db_p2Wins);
-			$("#player2LblLosses").text("Losses: " + snapshot.val().db_p2Losses);
+			$("#player2Wins").text("Wins: " + snapshot.val().db_p2Wins);
+			$("#player2Losses").text("Losses: " + snapshot.val().db_p2Losses);
 		}
 		// If player 1 just logged out, don't let p2 play yet
 		else if(snapshot.val().db_p2Name === undefined && snapshot.val().db_p1Name !== undefined) {
@@ -75,13 +76,13 @@
 			$("#p1c3").text(" ");
 			$("#gameStats").text("Waiting for a new opponent...");
 			$("#player2Name").text("Empty Seat");
-			$("#player2LblWins").text(" ");
-			$("#player2LblLosses").text(" ");
+			$("#player2Wins").text(" ");
+			$("#player2Losses").text(" ");
 		}
 		else {
 			$("#player2Name").text("Empty Seat");
-			$("#player2LblWins").text(" ");
-			$("#player2LblLosses").text(" ");
+			$("#player2Wins").text(" ");
+			$("#player2Losses").text(" ");
 		}
 
 		// if Both players are active
@@ -132,12 +133,12 @@
 				// If player 1 wins
 				if((p1Choice === "Rock" && p2Choice === "Scissors") || (p1Choice === "Paper" && p2Choice === "Rock") || (p1Choice === "Scissors" && p2Choice === "Paper")) {
 					$("#gameStats").text("Player 1 wins!");
-					// Only update the database 1 time
 					if(whoAmI === "player1") {
 						p1Wins = snapshot.val().db_p1Wins;
 						p1Wins++;
 						p2Losses = snapshot.val().db_p2Losses;
 						p2Losses++;
+						tie = tie;
 						playerTurn = 3;
 						database.ref().update({
 							db_p1Wins: p1Wins,
@@ -145,16 +146,20 @@
 							db_playerTurn: playerTurn
 						});
 					}
+					$("#player1Wins").append("Wins: " + p1Wins);
+					$("#player2Losses").append("Losses: " + p2Losses);
+					$("tie1").append("Ties: " + tie);
 				}
 				// Else if player 2 wins
 				else if((p2Choice === "Rock" && p1Choice === "Scissors") || (p2Choice === "Paper" && p1Choice === "Rock") || (p2Choice === "Scissors" && p1Choice === "Paper")) {
 					$("#gameStats").text("Player 2 wins!");
-					// Only update the database 1 time
+
 					if(whoAmI === "player1") {
 						p2Wins = snapshot.val().db_p2Wins;
 						p2Wins++;
 						p1Losses = snapshot.val().db_p1Losses;
 						p1Losses++;
+						tie = tie;
 						playerTurn = 3;
 						database.ref().update({
 							db_p2Wins: p2Wins,
@@ -162,10 +167,16 @@
 							db_playerTurn: playerTurn
 						});
 					}
+					$("#player2Wins").append("Wins: " + p2Wins);
+					$("#player1Losses").append("Losses: " + p1Losses);
+					$("tie2").append("Ties: " + tie);
 				}
 				// Else (draw)
 				else {
-					$("#gameStats").text("It's a draw!")
+					tie++;
+					$("#gameStats").text("It's a draw!");
+					$("tie1").append("Ties: " + tie);
+					$("tie2").append("Ties: " + tie);
 				}
 				// setTimeout for 3 seconds & reset playerturn to 1
 				setTimeout(resetPlayerTurn, 1000 * 5);
@@ -174,24 +185,23 @@
 
 	    // if a new user arrives & no p1, user can become p1
 		if(whoAmI === "none" && snapshot.val().db_p1Name === undefined) {
-			drawPlayerNameInput("player1");
+			displayPlayerInput("player1");
 			resetPlayerTurn();
 		}
 		// If a new user arrives & p1 exists but no p2, user can become p2
 		else if(whoAmI === "none" && snapshot.val().db_p2Name === undefined) {
-			drawPlayerNameInput("player2");
+			displayPlayerInput("player2");
 			resetPlayerTurn();
 		}
 		// If both p1 & p2 exist, user can spectate until a spot becomes available
 		else if(whoAmI === "none") {
-			drawPlayerNameDisplay();
+			displayPlayerName();
 		}
 
     	// Set the local variable of p1's choice
     	p1Choice = snapshot.val().db_p1Choice;
 
     // If there is an error that Firebase runs into -- it will be stored in the "errorObject"
-    // Again we could have named errorObject anything we wanted.
     }, function(errorObject) {
 
     	// In case of error this will print the error
@@ -223,8 +233,7 @@
 				db_p2Choice: decision,
 				db_playerTurn: playerTurn
 			});
-			// player2Rock will be immediately overwritten; to avoid writing in the wrong order, this line isn't needed
-			// $(".player2Rock").text(" ");
+
 			$(".player2Paper").text (" ");
 			$(".player2Scissors").text (" ");
 		}
@@ -248,7 +257,7 @@
 			
 			// Identify which player the user is & draw the player's side of the board
 			whoAmI = "player1";
-			drawPlayerNameDisplay();
+			displayPlayerName();
 		}
 		// If the form was for player 2, do the same
 		else if($(this).attr("id") === "player2") {
@@ -261,7 +270,7 @@
 			});
 
 			whoAmI = "player2";
-			drawPlayerNameDisplay();
+			displayPlayerName();
 		}
 	});
 
@@ -274,8 +283,8 @@
 		$("#p2Image").html(" ");
 	}
 
-	// Draws the Player Name Input area if a player's seat is empty
-	function drawPlayerNameInput(whichPlayer) {
+	// Design player's area
+	function displayPlayerInput(whichPlayer) {
     	$("#playerIntro").html(
 			'<form class="form-inline">'
 		+		'<div class="form-group">'
@@ -287,7 +296,7 @@
 	}
 
 	// Shows the player which seat they're in, or if they're spectating
-	function drawPlayerNameDisplay() {
+	function displayPlayerName() {
 		if(whoAmI === "none") {
 			$("#playerIntro").html("You are currently spectating.");
 		}
@@ -344,21 +353,17 @@
 	});
 
 
-
-
 	// When the user closes the window or tab, their seat becomes available
 	$(window).unload(function(){
-		// If the player is p1, reset the p1 DB values
+
 		if(whoAmI === "player1") {
 			database.ref().update({
 				db_p1Name: null,
 				db_p1Wins: 0,
 				db_p1Losses: 0
 			});
-
-
 		}
-		// If the player is p2, reset the p2 DB values
+
 		else if(whoAmI === "player2") {
 			database.ref().update({
 				db_p2Name: null,
@@ -366,5 +371,4 @@
 				db_p2Losses: 0
 			});
 		}
-		// Do *NOT* end with a simple "else" because if a spectator leaves, no other action is necessary
 	});
