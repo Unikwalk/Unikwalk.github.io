@@ -21,16 +21,13 @@
 	var p2Name;
 	var p2Choice;
 
-	var tie;
+	var tie = 0;
 	var playerTurn;
 	var whoAmI = "none";
 
-	// Using .on("value", function(snapshot)) syntax will retrieve the data
-    // from the database (both initially and every time something changes)
-    // This will then store the data inside the variable "snapshot". We could rename "snapshot" to anything.
     database.ref().on("value", function(snapshot) {
 
-    	// Determine which player's turn it is.
+    	// Determine player's turn:
     	if(snapshot.val().db_playerTurn !== undefined) {
     		playerTurn = snapshot.val().db_playerTurn;
     	}
@@ -41,13 +38,13 @@
     		});
     	}
 
-		// If db_player1 has a name, display p1Stats
+		// display p1 stats
 		if(snapshot.val().db_p1Name !== undefined) {
 			$("#player1Name").text(snapshot.val().db_p1Name);
 			$("#player1Wins").text("Wins: " + snapshot.val().db_p1Wins);
 			$("#player1Losses").text("Losses: " + snapshot.val().db_p1Losses);
 		}
-		// If player 2 just logged out, don't let p1 play yet
+		// if p2 left, p1 waits
 		else if(snapshot.val().db_p1Name === undefined && snapshot.val().db_p2Name !== undefined) {
 			$("#p2c1").text(" ");
 			$("#p2c2").text(" ");
@@ -63,13 +60,13 @@
 			$("#player1Losses").text(" ");
 		}
 
-		// If db_player2 has a name, display p2Stats
+		// display p2 Stats, repeat for p2
 		if(snapshot.val().db_p2Name !== undefined) {
 			$("#player2Name").text(snapshot.val().db_p2Name);
 			$("#player2Wins").text("Wins: " + snapshot.val().db_p2Wins);
 			$("#player2Losses").text("Losses: " + snapshot.val().db_p2Losses);
 		}
-		// If player 1 just logged out, don't let p2 play yet
+
 		else if(snapshot.val().db_p2Name === undefined && snapshot.val().db_p1Name !== undefined) {
 			$("#p1c1").text(" ");
 			$("#p1c2").text(" ");
@@ -85,7 +82,7 @@
 			$("#player2Losses").text(" ");
 		}
 
-		// if Both players are active
+		// if both players are active
 		if(snapshot.val().db_p1Name !== undefined && snapshot.val().db_p2Name !== undefined) {
 			var rock = $("<img>").attr({
 				"src": "assets/images/Rock.png",
@@ -102,7 +99,7 @@
 				"width": 150,
 				"height": 150
 			});
-			// if db_playerTurn === 1
+			// if turn = 1
 			if(snapshot.val().db_playerTurn === 1) {
 				if(whoAmI === "player1") {
 					// let player1 choose
@@ -118,7 +115,7 @@
 					$("#p2c1").text(" ");
 				}
 			}
-			// else if db_playerTurn === 2
+			// if turn = 2
 			else if(snapshot.val().db_playerTurn === 2) {
 				if(whoAmI === "player2") {
 					// let player2 choose
@@ -147,7 +144,7 @@
 
 				// If player 1 wins
 				if((p1Choice === "Rock" && p2Choice === "Scissors") || (p1Choice === "Paper" && p2Choice === "Rock") || (p1Choice === "Scissors" && p2Choice === "Paper")) {
-					$("#gameStats").text("Player 1 wins!");
+					$("#gameStats").text("PLAYER 1 WINS!");
 					if(whoAmI === "player1") {
 						p1Wins = snapshot.val().db_p1Wins;
 						p1Wins++;
@@ -161,13 +158,12 @@
 							db_playerTurn: playerTurn
 						});
 					}
-					$("#player1Wins").append("Wins: " + p1Wins);
-					$("#player2Losses").append("Losses: " + p2Losses);
-					$("#tie1").append("Ties: " + tie);
+					$("#player1Wins").text("Wins: " + p1Wins);
+					$("#player2Losses").text("Losses: " + p2Losses);
 				}
 				// Else if player 2 wins
 				else if((p2Choice === "Rock" && p1Choice === "Scissors") || (p2Choice === "Paper" && p1Choice === "Rock") || (p2Choice === "Scissors" && p1Choice === "Paper")) {
-					$("#gameStats").text("Player 2 wins!");
+					$("#gameStats").text("PLAYER 2 WINS!");
 
 					if(whoAmI === "player1") {
 						p2Wins = snapshot.val().db_p2Wins;
@@ -182,19 +178,18 @@
 							db_playerTurn: playerTurn
 						});
 					}
-					$("#player2Wins").append("Wins: " + p2Wins);
-					$("#player1Losses").append("Losses: " + p1Losses);
-					$("#tie2").append("Ties: " + tie);
+					$("#player2Wins").text("Wins: " + p2Wins);
+					$("#player1Losses").text("Losses: " + p1Losses);
 				}
-				// Else (draw)
+				// draw
 				else {
 					tie++;
-					$("#gameStats").text("It's a draw!");
-					$("#tie1").append("Ties: " + tie);
-					$("#tie2").append("Ties: " + tie);
+					$("#gameStats").text("IT'S A DRAW!");
+					$("#tie1").text(tie);
+					$("#tie2").text(tie);
 				}
-				// setTimeout for 3 seconds & reset playerturn to 1
-				setTimeout(resetPlayerTurn, 1000 * 5);
+				// timeout for 3 seconds & reset playerturn to 1
+				setTimeout(resetPlayerTurn, 3000);
 			}
 		}
 
@@ -208,29 +203,22 @@
 			displayPlayerInput("player2");
 			resetPlayerTurn();
 		}
-		// If both p1 & p2 exist, user can spectate until a spot becomes available
+		// If both p1 & p2 exist, new user waits
 		else if(whoAmI === "none") {
 			displayPlayerName();
 		}
 
-    	// Set the local variable of p1's choice
     	p1Choice = snapshot.val().db_p1Choice;
-
-    // If there is an error that Firebase runs into -- it will be stored in the "errorObject"
     }, function(errorObject) {
-
-    	// In case of error this will print the error
     	console.log("The read failed: " + errorObject.code);
     });
 
     // When a user clicks on one of the 3 choices,
 	$(document).on("click", ".choice", function() {
 		var decision = $(this).attr("data-val");
-		//if p1's turn
+		//p1 turn
 		if(playerTurn === 1) {
-			// playerturn = 2
 			playerTurn = 2;
-			// update p1 db value
 			database.ref().update({
 				db_p1Choice: decision,
 				db_playerTurn: playerTurn
@@ -239,11 +227,10 @@
 			$(".player1Paper").text (" ");
 			$(".player1Scissors").text (" ");
 		}
-		// if p2's turn
+		//p2 turn
 		else if(playerTurn === 2) {
-			// playerturn = 0
+			// reset turn to 0
 			playerTurn = 0;
-			// update p2 db value
 			database.ref().update({
 				db_p2Choice: decision,
 				db_playerTurn: playerTurn
@@ -260,7 +247,7 @@
 
 		playerTurn = 1;
 
-		// If the form was for player 1, set local p1Name & update db_p1Name
+		// P1
 		if($(this).attr("id") === "player1") {
 			p1Name = $("#playerNameInput").val().trim();
 			database.ref().update({
@@ -274,7 +261,7 @@
 			whoAmI = "player1";
 			displayPlayerName();
 		}
-		// If the form was for player 2, do the same
+		// P2
 		else if($(this).attr("id") === "player2") {
 			p2Name = $("#playerNameInput").val().trim();
 			database.ref().update({
@@ -368,7 +355,7 @@
 	});
 
 
-	// When the user closes the window or tab, their seat becomes available
+	// When the user left, seat becomes empty
 	$(window).unload(function(){
 
 		if(whoAmI === "player1") {
@@ -378,7 +365,6 @@
 				db_p1Losses: 0
 			});
 		}
-
 		else if(whoAmI === "player2") {
 			database.ref().update({
 				db_p2Name: null,
