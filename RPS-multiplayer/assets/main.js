@@ -24,6 +24,9 @@
 	var playerTurn;
 	var whoAmI = "none";
 
+	// Using .on("value", function(snapshot)) syntax will retrieve the data
+    // from the database (both initially and every time something changes)
+    // This will then store the data inside the variable "snapshot". We could rename "snapshot" to anything.
     database.ref().on("value", function(snapshot) {
 
     	// Determine which player's turn it is.
@@ -43,7 +46,7 @@
 			$("#player1Wins").text("Wins: " + snapshot.val().db_p1Wins);
 			$("#player1Losses").text("Losses: " + snapshot.val().db_p1Losses);
 		}
-		// If P2 left, P1 has to wait
+		// If player 2 just logged out, don't let p1 play yet
 		else if(snapshot.val().db_p1Name === undefined && snapshot.val().db_p2Name !== undefined) {
 			$("#p2c1").text(" ");
 			$("#p2c2").text(" ");
@@ -59,13 +62,13 @@
 			$("#player1Losses").text(" ");
 		}
 
-		// Repeat for P2
+		// If db_player2 has a name, display p2Stats
 		if(snapshot.val().db_p2Name !== undefined) {
 			$("#player2Name").text(snapshot.val().db_p2Name);
 			$("#player2LblWins").text("Wins: " + snapshot.val().db_p2Wins);
 			$("#player2LblLosses").text("Losses: " + snapshot.val().db_p2Losses);
 		}
-
+		// If player 1 just logged out, don't let p2 play yet
 		else if(snapshot.val().db_p2Name === undefined && snapshot.val().db_p1Name !== undefined) {
 			$("#p1c1").text(" ");
 			$("#p1c2").text(" ");
@@ -81,31 +84,15 @@
 			$("#player2LblLosses").text(" ");
 		}
 
-		var rock = $("<img>").attr({
-			"src": "assets/images/Rock.png",
-			"width": 150,
-			"height": 150
-		})
-		var paper = $("<img>").attr({
-			"src": "assets/images/Paper.png",
-			"width": 150,
-			"height": 150
-		})
-		var scissors = $("<img>").attr({
-			"src": "assets/images/Scissors.png",
-			"width": 150,
-			"height": 150
-		})
-
 		// if Both players are active
 		if(snapshot.val().db_p1Name !== undefined && snapshot.val().db_p2Name !== undefined) {
 			// if db_playerTurn === 1
 			if(snapshot.val().db_playerTurn === 1) {
 				if(whoAmI === "player1") {
 					// let player1 choose
-					$(".player1Rock").append(rock);
-					$(".player1Paper").append(paper);
-					$(".player1Scissors").append(scissors);
+					$(".player1Rock").text("Rock");
+					$(".player1Paper").text("Paper");
+					$(".player1Scissors").text("Scissors");
 					$("#gameStats").text("Choose your weapon!");
 					$("#p2c1").text(" ");
 				}
@@ -119,9 +106,9 @@
 			else if(snapshot.val().db_playerTurn === 2) {
 				if(whoAmI === "player2") {
 					// let player2 choose
-					$(".player2Rock").append(rock);
-					$(".player2Paper").append(paper);
-					$(".player2Scissors").append(scissors);
+					$(".player2Rock").text("Rock");
+					$(".player2Paper").text("Paper");
+					$(".player2Scissors").text("Scissors");
 					$("#gameStats").text("Choose your weapon!");
 					$("#p1c1").text(" ");
 				}
