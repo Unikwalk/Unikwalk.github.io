@@ -10,18 +10,23 @@
     firebase.initializeApp(config);
 
 	var database = firebase.database();
+
 	var p1Wins;
 	var p1Losses;
 	var p1Name;
 	var p1Choice;
+
 	var p2Wins;
 	var p2Losses;
 	var p2Name;
 	var p2Choice;
+
 	var playerTurn;
 	var whoAmI = "none";
-	var theme = 1;
 
+	// Using .on("value", function(snapshot)) syntax will retrieve the data
+    // from the database (both initially and every time something changes)
+    // This will then store the data inside the variable "snapshot". We could rename "snapshot" to anything.
     database.ref().on("value", function(snapshot) {
 
     	// Determine which player's turn it is.
@@ -41,67 +46,53 @@
 			$("#player1Wins").text("Wins: " + snapshot.val().db_p1Wins);
 			$("#player1Losses").text("Losses: " + snapshot.val().db_p1Losses);
 		}
-		// If player 2 just left, p1 has to wait
+		// If player 2 just logged out, don't let p1 play yet
 		else if(snapshot.val().db_p1Name === undefined && snapshot.val().db_p2Name !== undefined) {
 			$("#p2c1").text(" ");
 			$("#p2c2").text(" ");
 			$("#p2c3").text(" ");
-			$("#gameStats").text("Waiting for your opponent...");
-			$("#player1Name").text("New Player");
+			$("#gameStats").text("Waiting for a new opponent...");
+			$("#player1Name").text("Empty Seat");
 			$("#player1Wins").text(" ");
 			$("#player1Losses").text(" ");
 		}
 		else {
-			$("#player1Name").text("New Player");
+			$("#player1Name").text("Empty Seat");
 			$("#player1Wins").text(" ");
 			$("#player1Losses").text(" ");
 		}
 
-		// Repeat the same for player 2
+		// If db_player2 has a name, display p2Stats
 		if(snapshot.val().db_p2Name !== undefined) {
 			$("#player2Name").text(snapshot.val().db_p2Name);
-			$("#player2Wins").text("Wins: " + snapshot.val().db_p2Wins);
-			$("#player2Losses").text("Losses: " + snapshot.val().db_p2Losses);
+			$("#player2LblWins").text("Wins: " + snapshot.val().db_p2Wins);
+			$("#player2LblLosses").text("Losses: " + snapshot.val().db_p2Losses);
 		}
+		// If player 1 just logged out, don't let p2 play yet
 		else if(snapshot.val().db_p2Name === undefined && snapshot.val().db_p1Name !== undefined) {
 			$("#p1c1").text(" ");
 			$("#p1c2").text(" ");
 			$("#p1c3").text(" ");
-			$("#gameStats").text("Waiting for your opponent...");
-			$("#player2Name").text("New Player");
-			$("#player2Wins").text(" ");
-			$("#player2Losses").text(" ");
+			$("#gameStats").text("Waiting for a new opponent...");
+			$("#player2Name").text("Empty Seat");
+			$("#player2LblWins").text(" ");
+			$("#player2LblLosses").text(" ");
 		}
 		else {
-			$("#player2Name").text("New Player");
-			$("#player2Wins").text(" ");
-			$("#player2Losses").text(" ");
+			$("#player2Name").text("Empty Seat");
+			$("#player2LblWins").text(" ");
+			$("#player2LblLosses").text(" ");
 		}
 
-		//Both players are active
+		// if Both players are active
 		if(snapshot.val().db_p1Name !== undefined && snapshot.val().db_p2Name !== undefined) {
-            var rock = $("<img>").attr({
-                                        "src":"assets/images/Rock.png",
-                                        "height": 150,
-                                        "width" : 150
-                                        })
-
-            var paper = $("<img>").attr({
-                                        "src":"assets/images/Paper.png",
-                                        "height": 150,
-                                        "width" : 150
-                                        })
-            var scissors = $("<img>").attr({
-                                        "src":"assets/images/Scissors.png",
-                                        "height": 150,
-                                        "width" : 150
-                                        })
-			// P1 plays first, turn 1
+			// if db_playerTurn === 1
 			if(snapshot.val().db_playerTurn === 1) {
 				if(whoAmI === "player1") {
-					$(".player1Rock").append(rock);
-					$(".player1Paper").append(paper);
-					$(".player1Scissors").append(scissors);
+					// let player1 choose
+					$(".player1Rock").text("Rock");
+					$(".player1Paper").text("Paper");
+					$(".player1Scissors").text("Scissors");
 					$("#gameStats").text("Choose your weapon!");
 					$("#p2c1").text(" ");
 				}
@@ -111,12 +102,13 @@
 					$("#p2c1").text(" ");
 				}
 			}
-			// P2 plays 2nd, turn = 2
+			// else if db_playerTurn === 2
 			else if(snapshot.val().db_playerTurn === 2) {
 				if(whoAmI === "player2") {
-					$(".player2Rock").append(rock);
-					$(".player2Paper").append(paper);
-					$(".player2Scissors").append(scissors);
+					// let player2 choose
+					$(".player2Rock").text("Rock");
+					$(".player2Paper").text("Paper");
+					$(".player2Scissors").text("Scissors");
 					$("#gameStats").text("Choose your weapon!");
 					$("#p1c1").text(" ");
 				}
@@ -126,7 +118,9 @@
 					$("#p2c1").text(" ");
 				}
 			}
+			// else
 			else if(snapshot.val().db_playerTurn === 0) {
+				// Display all results
 				p1Choice = snapshot.val().db_p1Choice;
 				p2Choice = snapshot.val().db_p2Choice;
 				$("#p1c1").text(p1Choice);
@@ -138,7 +132,7 @@
 				// If player 1 wins
 				if((p1Choice === "Rock" && p2Choice === "Scissors") || (p1Choice === "Paper" && p2Choice === "Rock") || (p1Choice === "Scissors" && p2Choice === "Paper")) {
 					$("#gameStats").text("Player 1 wins!");
-
+					// Only update the database 1 time
 					if(whoAmI === "player1") {
 						p1Wins = snapshot.val().db_p1Wins;
 						p1Wins++;
@@ -155,7 +149,7 @@
 				// Else if player 2 wins
 				else if((p2Choice === "Rock" && p1Choice === "Scissors") || (p2Choice === "Paper" && p1Choice === "Rock") || (p2Choice === "Scissors" && p1Choice === "Paper")) {
 					$("#gameStats").text("Player 2 wins!");
-
+					// Only update the database 1 time
 					if(whoAmI === "player1") {
 						p2Wins = snapshot.val().db_p2Wins;
 						p2Wins++;
@@ -169,7 +163,7 @@
 						});
 					}
 				}
-				// draw
+				// Else (draw)
 				else {
 					$("#gameStats").text("It's a draw!")
 				}
@@ -180,17 +174,17 @@
 
 	    // if a new user arrives & no p1, user can become p1
 		if(whoAmI === "none" && snapshot.val().db_p1Name === undefined) {
-			playerNameInput("player1");
+			drawPlayerNameInput("player1");
 			resetPlayerTurn();
 		}
 		// If a new user arrives & p1 exists but no p2, user can become p2
 		else if(whoAmI === "none" && snapshot.val().db_p2Name === undefined) {
-			playerNameInput("player2");
+			drawPlayerNameInput("player2");
 			resetPlayerTurn();
 		}
 		// If both p1 & p2 exist, user can spectate until a spot becomes available
 		else if(whoAmI === "none") {
-			displayPlayerName();
+			drawPlayerNameDisplay();
 		}
 
     	// Set the local variable of p1's choice
@@ -229,6 +223,8 @@
 				db_p2Choice: decision,
 				db_playerTurn: playerTurn
 			});
+			// player2Rock will be immediately overwritten; to avoid writing in the wrong order, this line isn't needed
+			// $(".player2Rock").text(" ");
 			$(".player2Paper").text (" ");
 			$(".player2Scissors").text (" ");
 		}
@@ -252,9 +248,9 @@
 			
 			// Identify which player the user is & draw the player's side of the board
 			whoAmI = "player1";
-			displayPlayerName();
+			drawPlayerNameDisplay();
 		}
-		// same for player 2
+		// If the form was for player 2, do the same
 		else if($(this).attr("id") === "player2") {
 			p2Name = $("#playerNameInput").val().trim();
 			database.ref().update({
@@ -265,7 +261,7 @@
 			});
 
 			whoAmI = "player2";
-			displayPlayerName();
+			drawPlayerNameDisplay();
 		}
 	});
 
@@ -278,8 +274,8 @@
 		$("#p2Image").html(" ");
 	}
 
-	// Design player's input area when the seat is empty
-	function playerNameInput(whichPlayer) {
+	// Draws the Player Name Input area if a player's seat is empty
+	function drawPlayerNameInput(whichPlayer) {
     	$("#playerIntro").html(
 			'<form class="form-inline">'
 		+		'<div class="form-group">'
@@ -291,7 +287,7 @@
 	}
 
 	// Shows the player which seat they're in, or if they're spectating
-	function displayPlayerName() {
+	function drawPlayerNameDisplay() {
 		if(whoAmI === "none") {
 			$("#playerIntro").html("You are currently spectating.");
 		}
@@ -347,9 +343,12 @@
 		}
 	});
 
+
+
+
 	// When the user closes the window or tab, their seat becomes available
 	$(window).unload(function(){
-		// reset P1
+		// If the player is p1, reset the p1 DB values
 		if(whoAmI === "player1") {
 			database.ref().update({
 				db_p1Name: null,
@@ -359,7 +358,7 @@
 
 
 		}
-		// reset P2
+		// If the player is p2, reset the p2 DB values
 		else if(whoAmI === "player2") {
 			database.ref().update({
 				db_p2Name: null,
@@ -367,4 +366,5 @@
 				db_p2Losses: 0
 			});
 		}
+		// Do *NOT* end with a simple "else" because if a spectator leaves, no other action is necessary
 	});
