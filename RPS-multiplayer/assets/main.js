@@ -87,13 +87,28 @@
 
 		// if Both players are active
 		if(snapshot.val().db_p1Name !== undefined && snapshot.val().db_p2Name !== undefined) {
+			var rock = $("<img>").attr({
+				"src": "assets/images/Rock.png",
+				"width": 150,
+				"height": 150
+			});
+			var paper = $("<img>").attr({
+				"src": "assets/images/Paper.png",
+				"width": 150,
+				"height": 150
+			});
+			var scissors = $("<img>").attr({
+				"src": "assets/images/Scissors.png",
+				"width": 150,
+				"height": 150
+			});
 			// if db_playerTurn === 1
 			if(snapshot.val().db_playerTurn === 1) {
 				if(whoAmI === "player1") {
 					// let player1 choose
-					$(".player1Rock").text("Rock");
-					$(".player1Paper").text("Paper");
-					$(".player1Scissors").text("Scissors");
+					$(".player1Rock").append(rock);
+					$(".player1Paper").append(paper);
+					$(".player1Scissors").append(scissors);
 					$("#gameStats").text("Choose your weapon!");
 					$("#p2c1").text(" ");
 				}
@@ -107,9 +122,9 @@
 			else if(snapshot.val().db_playerTurn === 2) {
 				if(whoAmI === "player2") {
 					// let player2 choose
-					$(".player2Rock").text("Rock");
-					$(".player2Paper").text("Paper");
-					$(".player2Scissors").text("Scissors");
+					$(".player2Rock").append(rock);
+					$(".player2Paper").append(paper);
+					$(".player2Scissors").append(scissors);
 					$("#gameStats").text("Choose your weapon!");
 					$("#p1c1").text(" ");
 				}
@@ -148,7 +163,7 @@
 					}
 					$("#player1Wins").append("Wins: " + p1Wins);
 					$("#player2Losses").append("Losses: " + p2Losses);
-					$("tie1").append("Ties: " + tie);
+					$("#tie1").append("Ties: " + tie);
 				}
 				// Else if player 2 wins
 				else if((p2Choice === "Rock" && p1Choice === "Scissors") || (p2Choice === "Paper" && p1Choice === "Rock") || (p2Choice === "Scissors" && p1Choice === "Paper")) {
@@ -169,14 +184,14 @@
 					}
 					$("#player2Wins").append("Wins: " + p2Wins);
 					$("#player1Losses").append("Losses: " + p1Losses);
-					$("tie2").append("Ties: " + tie);
+					$("#tie2").append("Ties: " + tie);
 				}
 				// Else (draw)
 				else {
 					tie++;
 					$("#gameStats").text("It's a draw!");
-					$("tie1").append("Ties: " + tie);
-					$("tie2").append("Ties: " + tie);
+					$("#tie1").append("Ties: " + tie);
+					$("#tie2").append("Ties: " + tie);
 				}
 				// setTimeout for 3 seconds & reset playerturn to 1
 				setTimeout(resetPlayerTurn, 1000 * 5);
