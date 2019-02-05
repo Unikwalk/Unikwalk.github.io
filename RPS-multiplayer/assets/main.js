@@ -25,7 +25,7 @@ var tie = 0;
 var playerTurn;
 var whoAmI = "none";
 
-database.ref().on("value", function(snapshot) {
+database.ref("db_playerTurn").on("value", function(snapshot) {
 
 	// Determine player's turn:
 	if(snapshot.val().db_playerTurn !== undefined) {
@@ -337,7 +337,7 @@ $(document).on("click", "#chatSubmit", function(event) {
 	$("#inputChatText").val(" ");
 });
 
-database.ref().on("child_added", function(snapshot) {
+database.ref("db_chatType").on("child_added", function(snapshot) {
 	var chatType = snapshot.val().db_chatType;
 	var chatName = snapshot.val().db_chatName;
 	var chatText = snapshot.val().db_chatText;
