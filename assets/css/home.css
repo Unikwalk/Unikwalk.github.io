@@ -110,7 +110,7 @@ a {
   background-color: #F6F4F5;
 }
 
-a:hover{
+.navbar-nav a:hover{
   color: white;
 }
 
@@ -165,4 +165,17 @@ text-align: center;
 #main-container {
   padding-top: 120px;
   min-height: calc(100vh - 70px);
+}
+
+.center {
+  margin: auto;
+  width: 50%;
+}
+
+i {
+padding: 5px;
+}
+
+.center a:hover{
+  text-decoration: none;
 }
